@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2024 Your Name
+ * Copyright (c) 2024 Hanyuan (Bob) Huang
  * SPDX-License-Identifier: Apache-2.0
  */
 
 `default_nettype none
 
-module tt_um_b_0_array_multiplier (
+module tt_um_b_8_array_multiplier(
     input  wire [7:0] ui_in,    // Dedicated inputs
     output wire [7:0] uo_out,   // Dedicated outputs
     input  wire [7:0] uio_in,   // IOs: Input path
@@ -16,81 +16,102 @@ module tt_um_b_0_array_multiplier (
     input  wire       rst_n     // reset_n - low to reset
 );
 
-wire [3:0] m = ui_in[3:0];
-wire [3:0] q = ui_in[7:4];
-wire [7:0] p;
-
-	wire m0q0, m1q0, m2q0, m3q0;
-	wire m0q1, m1q1, m2q1, m3q1;
-	wire m0q2, m1q2, m2q2, m3q2;
-	wire m0q3, m1q3, m2q3, m3q3;
-
-	wire [3:0] carry_adders_1;
-	wire [3:0] carry_adders_2;
-	wire [3:0] carry_adders_3;
-
-	wire [2:0] sum_adders_1;
-	wire [2:0] sum_adders_2;
-
-	assign p[0] = m[0] & q[0];
-
-	assign m1q0 = m[1] & q[0];
-	assign m2q0 = m[2] & q[0];
-	assign m3q0 = m[3] & q[0];
-
-	assign m0q1 = m[0] & q[1];
-	assign m1q1 = m[1] & q[1];
-	assign m2q1 = m[2] & q[1];
-	assign m3q1 = m[3] & q[1];
-
-	assign m0q2 = m[0] & q[2];
-	assign m1q2 = m[1] & q[2];
-	assign m2q2 = m[2] & q[2];
-	assign m3q2 = m[3] & q[2];
-
-	assign m0q3 = m[0] & q[3];
-	assign m1q3 = m[1] & q[3];
-	assign m2q3 = m[2] & q[3];
-	assign m3q3 = m[3] & q[3];
-
-	full_adder fa0 (.a(m0q1), .b(m1q0), .cin(1'b0), .sum(p[1]), .cout(carry_adders_1[0]));
-	full_adder fa1 (.a(m1q1), .b(m2q0), .cin(carry_adders_1[0]), .sum(sum_adders_1[0]), .cout(carry_adders_1[1]));
-	full_adder fa2 (.a(m2q1), .b(m3q0), .cin(carry_adders_1[1]), .sum(sum_adders_1[1]), .cout(carry_adders_1[2]));
-	full_adder fa3 (.a(m3q1), .b(1'b0), .cin(carry_adders_1[2]), .sum(sum_adders_1[2]), .cout(carry_adders_1[3]));
-
-	full_adder fa4 (.a(m0q2), .b(sum_adders_1[0]), .cin(1'b0), .sum(p[2]), .cout(carry_adders_2[0]));
-	full_adder fa5 (.a(m1q2), .b(sum_adders_1[1]), .cin(carry_adders_2[0]), .sum(sum_adders_2[0]), .cout(carry_adders_2[1]));
-	full_adder fa6 (.a(m2q2), .b(sum_adders_1[2]), .cin(carry_adders_2[1]), .sum(sum_adders_2[1]), .cout(carry_adders_2[2]));
-	full_adder fa7 (.a(m3q2), .b(carry_adders_1[3]), .cin(carry_adders_2[2]), .sum(sum_adders_2[2]), .cout(carry_adders_2[3]));
-
-	full_adder fa8 (.a(m0q3), .b(sum_adders_2[0]), .cin(1'b0), .sum(p[3]), .cout(carry_adders_3[0]));
-	full_adder fa9 (.a(m1q3), .b(sum_adders_2[1]), .cin(carry_adders_3[0]), .sum(p[4]), .cout(carry_adders_3[1]));
-	full_adder fa10 (.a(m2q3), .b(sum_adders_2[2]), .cin(carry_adders_3[1]), .sum(p[5]), .cout(carry_adders_3[2]));
-	full_adder fa11 (.a(m3q3), .b(carry_adders_2[3]), .cin(carry_adders_3[2]), .sum(p[6]), .cout(p[7]));
-
-
   // All output pins must be assigned. If not used, assign to 0.
-  assign uo_out  = p;  // Example: ou_out is the sum of ui_in and uio_in
+
+    wire [3:0] m = ui_in[7:4];
+    wire [3:0] q = ui_in[3:0];
+    wire [7:0] p;
+
+
+
+
+//partial products 
+    //partial digit 0 
+    wire p00 = m[0] & q[0];
+    wire p01 = m[0] & q[1];
+    wire p02 = m[0] & q[2];
+    wire p03 = m[0] & q[3];
+    
+    //partial digit 1 
+    wire p10 = m[1] & q[0];
+    wire p11 = m[1] & q[1];
+    wire p12 = m[1] & q[2];
+    wire p13 = m[1] & q[3];   
+    
+    //partial digit 2 
+    wire p20 = m[2] & q[0];
+    wire p21 = m[2] & q[1];
+    wire p22 = m[2] & q[2];
+    wire p23 = m[2] & q[3];
+    
+    //partial digit 3 
+    wire p30 = m[3] & q[0];
+    wire p31 = m[3] & q[1];
+    wire p32 = m[3] & q[2];
+    wire p33 = m[3] & q[3];
+    
+    
+    //wiring internal signals for adders 
+    wire s1, s2, s3, s4, s5, s6, s7, s8, s9;
+    wire c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12;
+    
+    //row 1
+    assign p[0] = p00;
+    
+    //row 2 
+    fullad fa1(.cin(1'b0), .x(p01), .y(p10), .sum(p[1]), .cout(c1));
+    fullad fa2(.cin(c1), .x(p02), .y(p11), .sum(s1), .cout(c2));
+    fullad fa3(.cin(c2), .x(p03), .y(p12), .sum(s2), .cout(c3));
+    fullad fa4(.cin(c3), .x(1'b0), .y(p13), .sum(s3), .cout(c4));
+    
+    //row 3 
+    fullad fa5(.cin(1'b0), .x(s1), .y(p20), .sum(p[2]), .cout(c5));
+    fullad fa6(.cin(c5), .x(s2), .y(p21), .sum(s4), .cout(c6));
+    fullad fa7(.cin(c6), .x(s3), .y(p22), .sum(s5), .cout(c7));
+    fullad fa8(.cin(c7), .x(c4), .y(p23), .sum(s6), .cout(c8));
+    
+    //row 4 
+    fullad fa9(.cin(1'b0), .x(s4), .y(p30), .sum(p[3]), .cout(c9));
+    fullad fa10(.cin(c9), .x(s5), .y(p31), .sum(s7), .cout(c10));
+    fullad fa11(.cin(c10), .x(s6), .y(p32), .sum(s8), .cout(c11));
+    fullad fa12(.cin(c11), .x(c8), .y(p33), .sum(s9), .cout(c12));
+    
+    //rest of digits 
+    assign p[4] = s7;
+    assign p[5] = s8;
+    assign p[6] = s9;
+    assign p[7] = c12;
+
+
+    assign uo_out = p; 
+
+
+    
 
 
   assign uio_out = 0;
   assign uio_oe  = 0;
 
+
+
   // List all unused inputs to prevent warnings
-  wire _unused = &{ena, clk, rst_n, uio_in, 1'b0};
+  wire _unused = &{ena, clk, rst_n, 1'b0};
 
+  endmodule
+
+
+module fullad(cin, x, y, sum, cout);
+    input x, y, cin;
+    output sum, cout;
+    wire z1, z2, z3;
+    
+    xor(sum,x,y,cin);
+    and(z1,x,y);
+    and(z2,x,cin);
+    and(z3,y,cin);
+    
+    or(cout,z1,z2,z3);
+     
 endmodule
 
-
-module full_adder (
-	input wire a,
-	input wire b,
-	input wire cin,
-	output wire sum,
-	output wire cout
-);
-
-	assign sum = a ^ b ^ cin;
-	assign cout = (a & b) | (a & cin) | (b & cin);
-endmodule
 
