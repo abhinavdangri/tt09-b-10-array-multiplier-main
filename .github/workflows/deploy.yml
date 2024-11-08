@@ -16,8 +16,8 @@ jobs:
 
     steps:
       # Step 1: Check out the repository's code
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v4
 
       # Step 2: Set up Node.js (or the necessary environment for your project)
       # If you're using a Node.js project, include this step
