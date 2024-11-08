@@ -1,8 +1,11 @@
-
+/*
+ * Copyright (c) 2024 Hanyuan (Bob) Huang
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 `default_nettype none
 
-module tt_um_b_10_array_multiplier(
+module tt_um_b_8_array_multiplier(
     input  wire [7:0] ui_in,    // Dedicated inputs
     output wire [7:0] uo_out,   // Dedicated outputs
     input  wire [7:0] uio_in,   // IOs: Input path
