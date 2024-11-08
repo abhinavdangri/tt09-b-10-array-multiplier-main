@@ -7,28 +7,26 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest  # Use the latest version of Ubuntu
-    environment: github-pages  # Set environment here at the job level
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages  # Explicitly setting the environment for GitHub Pages
 
     steps:
-      # Step 1: Check out the repository's code
-      - name: Checkout
+      - name: Checkout the code
         uses: actions/checkout@v4
 
-      # Step 2: Set up Node.js (or the necessary environment for your project)
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'  # Specify your Node.js version, e.g., 16 or higher
+          node-version: '16'  # Ensure compatibility with your project
 
-      # Step 3: Install dependencies and build the project
       - name: Install dependencies and build
         run: |
           npm install
           npm run build  # Replace with your specific build command if different
 
-      # Step 4: Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: 
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public  # Replace with the directory where your site is built
