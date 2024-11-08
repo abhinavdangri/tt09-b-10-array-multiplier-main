@@ -1,6 +1,5 @@
 name: Deploy to GitHub Pages
 
-# Trigger the workflow on pushes to the main branch
 on:
   push:
     branches:
@@ -10,17 +9,12 @@ jobs:
   deploy:
     runs-on: ubuntu-latest  # Use the latest version of Ubuntu
 
-    # Add the environment required for GitHub Pages deployment
-    environment:
-      name: github-pages
-
     steps:
       # Step 1: Check out the repository's code
       - name: Checkout
         uses: actions/checkout@v4
 
       # Step 2: Set up Node.js (or the necessary environment for your project)
-      # If you're using a Node.js project, include this step
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
@@ -38,3 +32,5 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}  # Use GitHub's token for authentication
           publish_dir: ./public  # Replace with your build output directory
+        environment:
+          name: github-pages
