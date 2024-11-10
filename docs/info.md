@@ -8,7 +8,7 @@ You can also include images in this folder and reference them in the markdown. E
 -->
 
 ## How it works
-An array multiplier is a combinational digital circuit used to multiply two binary numbers. It is structured similarly to the multiplication process, where partial products are generated and added to produce the final product. The array multiplier makes use of full adders, arranged in a systematic array to handle the binary addition of partial products.
+An array multiplier is a combinational digital circuit used to multiply two binary numbers. It is structured similarly to the multiplication process, where partial products are generated and added to produce the final product. The array multiplier makes use of full adders, arranged in a systematic array to handle the binary addition of partial products. This process is shown in the image 4x4_array_multiplier.png located in the docs folder as well as shown in this preview.
 <img width="302" alt="image" src="https://github.com/user-attachments/assets/1456734e-4bca-430b-a532-96e9ff6acbd2">
 
 
